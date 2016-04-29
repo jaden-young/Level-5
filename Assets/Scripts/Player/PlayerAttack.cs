@@ -5,7 +5,7 @@ using System.Collections;
 public class PlayerAttack : MonoBehaviour 
 {
 	
-	public float attackCoolDown = .5f; // Minimum time between attacks
+	public float attackCoolDown = .25f; // Minimum time between attacks
 	public int swordDamage = 5; // Damage for each attack to cause
 
 	Animator anim;
@@ -46,7 +46,11 @@ public class PlayerAttack : MonoBehaviour
 		{
 			// Tells the dragon to look for a script attached to it that has the method 
 			// TakeDamage and call it with an argument of our swordDamage (int 5).
-			other.SendMessage ("TakeDamage", swordDamage, SendMessageOptions.DontRequireReceiver);
+			other.SendMessageUpwards ("TakeDamage", swordDamage, SendMessageOptions.DontRequireReceiver);
+
+			// Only want to cause damage once per swing.
+			// If we don't set this here, dragon takes damage for every collider the sword hits.
+			isAttacking = false;
 		}
 	}
 				

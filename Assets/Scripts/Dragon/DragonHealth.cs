@@ -7,24 +7,14 @@ public class DragonHealth : MonoBehaviour
 {
 
 	public const int STARTING_HEALTH = 100;
-	public Slider healthSlider;
+	public Slider healthSlider; // Set in editor
+	public int currentHealth;
 
-	int currentHealth;
 	bool isDead;
 
 	void Awake()
 	{
 		currentHealth = STARTING_HEALTH;
-	}
-
-	void Start ()
-	{
-		
-	}
-
-	void Update ()
-	{
-
 	}
 
 	public void TakeDamage (int amount)
