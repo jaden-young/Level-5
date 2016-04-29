@@ -1,19 +1,23 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
-public class DragonMovement : MonoBehaviour 
+public class DragonAI : MonoBehaviour 
 {
 	// public variables are set in editor
 	public float attackCoolDown;
 	public int dragonDamage;
 	public float rotationSpeed;
 	public float attackRadius;
-	public DragonHealth dragonHealth;
 	public Transform player;
 	public NavMeshAgent nav;
 	public Animator anim;
+	public const int STARTING_HEALTH = 100;
+	public Slider healthSlider;
 
-	private int halfHealth = DragonHealth.STARTING_HEALTH / 2;
+	private int currentHealth;
+	private bool isDead;
+	private int halfHealth = STARTING_HEALTH / 2;
 	private const int HEADSWIPE_RANGE = 13;
 	private const int FLUTTER_KICK_RANGE = 8;
 	private float attackTimer = 0f;
@@ -23,31 +27,43 @@ public class DragonMovement : MonoBehaviour
 
 	void Awake ()
 	{
-		dragonHealth = GetComponentInParent<DragonHealth> ();
 		anim = GetComponent <Animator> ();
 		nav = GetComponent<NavMeshAgent> ();
 		player = GameObject.FindGameObjectWithTag ("Player").transform;
 		nav.updateRotation = true;
+		currentHealth = STARTING_HEALTH;
 	}
-		
+
+	void Start ()
+	{
+		Roar ();
+	}
+
 	void Update () 
 	{
-		
+
 		/*
 		 * We only want to check for a new state to enter when the dragon isn't currently
 		 * attacking. This has an affect of waiting for the attack animation to complete
-		 * before doing anything else. Also don't want to inturrupt state when dragon is
-		 * flying along predetermined flight path.
+		 * before doing anything else.
 		 */
-		if (isAttacking || isFlying) {
+		if (isAttacking || isDead || attackTimer < attackCoolDown) {
+			attackTimer += Time.deltaTime;
+			return;
+		}
+
+		if (isFlying) {
+			Fly ();
 			return;
 		}
 
 		// Let's check for a new state to enter
 
 		// Take off and fly around for a bit when we reach half health
-		if (dragonHealth.currentHealth <= halfHealth && !hasFlown) {
-			Fly ();
+		if (currentHealth <= halfHealth && !hasFlown) {
+			isFlying = true; // makes us start flying on next frame
+			hasFlown = true;
+			anim.Play ("TakeOff");
 			return;
 		}
 
@@ -56,7 +72,7 @@ public class DragonMovement : MonoBehaviour
 		heading.y = 0;                                                // don't care about height difference	
 		float distance = heading.magnitude;                           // distance between dragon and player
 		float angle = Vector3.Angle(transform.forward, heading);      // angle between dragon and player
-		
+
 		// we're close enogh for longest attack
 		if (distance < HEADSWIPE_RANGE) {
 			// target is in front of us
@@ -67,17 +83,33 @@ public class DragonMovement : MonoBehaviour
 				} else {
 					HeadSwipe ();
 				}
-			// we're close, but target is not in front
+				// we're close, but target is not in front
 			} else {
 				RotateTowards (heading);
 			}
-		// we're too far away to attack, move towards target
+			// we're too far away to attack, move towards target
 		} else {
 			Chase ();
 		}
-		attackTimer += Time.deltaTime;
+		//attackTimer += Time.deltaTime;
 	}
-		
+
+	public void TakeDamage (int amount)
+	{
+		currentHealth -= amount;
+
+		healthSlider.value = currentHealth;
+
+		if (currentHealth <= 0 && !isDead)
+		{
+			Death ();
+		}
+	}
+
+	void Death () {
+		isDead = true;
+	}
+
 	// For use with animation events. See similar method in PlayerAttack for more info.
 	void SetIsAttacking (int a)
 	{
@@ -107,29 +139,35 @@ public class DragonMovement : MonoBehaviour
 		transform.rotation = Quaternion.Slerp (transform.rotation, lookRotation, rotationSpeed);
 	}
 
+	void Roar () 
+	{
+		anim.Play ("Roar");
+	}
 	void FlutterKick ()
 	{
+		attackTimer = 0f;
 		nav.Stop ();
 		anim.Play ("FlutterKick");
 	}
 
 	void HeadSwipe ()
 	{
+		attackTimer = 0f;
 		nav.Stop ();
 		anim.Play ("HeadSwipe");
 	}
 
 	void Fly ()
 	{
-		hasFlown = true;
+
 	}
-		
+
 	void Chase ()
 	{
 		nav.destination = player.position;
 		nav.Resume ();
 		anim.Play ("Walk");
 	}
-		
+
 }
 

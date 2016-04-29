@@ -4,17 +4,20 @@ using System.Collections;
 	
 public class PlayerAttack : MonoBehaviour 
 {
-	
-	public float attackCoolDown = .25f; // Minimum time between attacks
-	public int swordDamage = 5; // Damage for each attack to cause
+	// public variables are set in editor
+	public float attackCoolDown; // Minimum time between attacks
+	public int swordDamage;      // Damage for each attack to cause
+	public AudioSource audioSword;
+	public Animator anim;
 
-	Animator anim;
-	float attackTimer = 0f; // Time since last attack
-	bool isAttacking = false; // This will be set by Animation Events in Sword
+
+	private float attackTimer = 0f; // Time since last attack
+	private bool isAttacking = false; // This will be set by Animation Events in Sword
 
 	void Awake ()
 	{
-		anim = GetComponent <Animator> ();
+		//anim = GetComponent <Animator> ();
+		//audioSword = GetComponent <AudioSource> ();
 	}
 		
 	void Start ()
@@ -58,8 +61,7 @@ public class PlayerAttack : MonoBehaviour
 	{
 		attackTimer += Time.deltaTime;
 
-		// Using GetMouseButton so player can hold mouse button down to spam attack
-		if (Input.GetMouseButton (0) && attackTimer >= attackCoolDown) 
+		if (Input.GetMouseButtonDown (0) && attackTimer >= attackCoolDown && !isAttacking) 
 		{
 			Attack ();
 		}			
@@ -91,6 +93,7 @@ public class PlayerAttack : MonoBehaviour
 	void Attack () 
 	{
 		anim.Play ("SwordSwing");
+		audioSword.Play ();
 		attackTimer = 0f;
 	}
 		
