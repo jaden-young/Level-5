@@ -20,14 +20,14 @@ public class DragonAI : MonoBehaviour
 	[SerializeField] private AudioClip fly;
 	[SerializeField] private AudioClip flutterKick;
 
+	public bool isDead { get; set; } // Will be referenced by chest controller
+
 	private Animator anim;
 	private NavMeshAgent nav;
 	private AudioSource audio;
 	private const int HEADSWIPE_RANGE = 13;
 	private const int FLUTTER_KICK_RANGE = 8;
 	private int currentHealth;
-	private bool isDead;
-	private bool isUpsideDown;
 	private int halfHealth;
 	private float attackTimer;
 	private bool hasFlown;
@@ -55,16 +55,12 @@ public class DragonAI : MonoBehaviour
 	void Update () 
 	{
 
-		if (isDead && !isUpsideDown) {
-			Death ();
-			return;
-		}
 		/*
 		 * We only want to check for a new state to enter when the dragon isn't currently
 		 * attacking. This has an affect of waiting for the attack animation to complete
 		 * before doing anything else.
 		 */
-		if (attackTimer < attackCoolDown || isFlying) {
+		if (attackTimer < attackCoolDown || isFlying || isDead) {
 			attackTimer += Time.deltaTime;
 			return;
 		}
@@ -130,14 +126,7 @@ public class DragonAI : MonoBehaviour
 	{
 		isDead = true;
 		nav.Stop ();
-		anim.Stop ();
-		if (!isUpsideDown) {
-			transform.Rotate (0, 0, 180);
-			isUpsideDown = true;
-		} else {
-			return;
-		}
-
+		anim.Play ("Death");
 	}
 
 	// For use with animation events. See similar method in PlayerAttack for more info.

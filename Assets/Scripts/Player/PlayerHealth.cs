@@ -4,9 +4,10 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour 
 {
-	// will be set in PlayerDefend script
+	// Will be set in PlayerDefend script
 	public bool isBlocking { get; set; }
-
+	// Will be accessed by LevelFiveManager
+	public bool isDead;
 
 	// Serialized fields set in editor
 	[SerializeField] private int startingHealth;
@@ -24,13 +25,12 @@ public class PlayerHealth : MonoBehaviour
 	private AudioSource audio;
 	private int currentHealth;
 	private bool takingDamage; // For flashing screen red when player is hit
-	private bool isDead;
+
 
 	void Awake()
 	{
 		audio = GetComponent <AudioSource> ();
 		currentHealth = startingHealth;
-		flashSpeed = 5f;
 	}
 
 	void Update ()
@@ -43,7 +43,7 @@ public class PlayerHealth : MonoBehaviour
 		else
 		{
 			// Fade to clear
-			damageImage.color = Color.Lerp (damageImage.color, Color.clear, flashSpeed = Time.deltaTime);
+			damageImage.color = Color.Lerp (damageImage.color, Color.clear, flashSpeed * Time.deltaTime);
 		}
 
 		//  set damage to false at the end of every frame
