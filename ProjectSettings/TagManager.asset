@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Dragon
   - Sword
+  - Waypoint
   layers:
   - Default
   - TransparentFX

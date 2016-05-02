@@ -4,33 +4,46 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour 
 {
-
-	public const int STARTING_HEALTH = 100;
-	public int currentHealth;
-	public Slider healthSlider;
-	//public Image damageImage;
-	public float flashSpeed = 5f;
-	public Color flashColor = new Color(1f, 0f, 0f, 0.1f);
-
+	// will be set in PlayerDefend script
 	public bool isBlocking { get; set; }
 
-	bool takingDamage; // For flashing screen red when player is hit
-	bool isDead;
+
+	// Serialized fields set in editor
+	[SerializeField] private int startingHealth;
+	[SerializeField] private Slider healthSlider;
+	[SerializeField] private Image damageImage;
+	[SerializeField] private float flashSpeed;
+	[SerializeField] private Color flashColor;
+
+	[Header("Audio Clips")]
+	[Space(5)]
+	[SerializeField] private AudioClip playerDamage;
+	[SerializeField] private AudioClip playerDeath;
+	[SerializeField] private AudioClip shieldHit;
+
+	private AudioSource audio;
+	private int currentHealth;
+	private bool takingDamage; // For flashing screen red when player is hit
+	private bool isDead;
 
 	void Awake()
 	{
-		currentHealth = STARTING_HEALTH;
+		audio = GetComponent <AudioSource> ();
+		currentHealth = startingHealth;
+		flashSpeed = 5f;
 	}
 
 	void Update ()
 	{
 		if (takingDamage)
 		{
-			//damageImage.color = flashColor;
+			// Show red image
+			damageImage.color = flashColor;
 		} 
 		else
 		{
-			//damageImage.color = Color.Lerp (damageImage.color, Color.clear, flashSpeed = Time.deltaTime);
+			// Fade to clear
+			damageImage.color = Color.Lerp (damageImage.color, Color.clear, flashSpeed = Time.deltaTime);
 		}
 
 		//  set damage to false at the end of every frame
@@ -39,11 +52,16 @@ public class PlayerHealth : MonoBehaviour
 
 	public void TakeDamage (int amount)
 	{
+		// Causes damage image to flash in Update
 		takingDamage = true;
 
-		if (isBlocking) 
-		{
+		if (isBlocking) {
+			audio.clip = shieldHit;
+			audio.Play ();
 			amount /= 2;
+		} else {
+			audio.clip = playerDamage;
+			audio.Play ();
 		}
 
 		currentHealth -= amount;
@@ -60,6 +78,8 @@ public class PlayerHealth : MonoBehaviour
 	void Death ()
 	{
 		isDead = true;
+		audio.clip = playerDeath;
+		audio.Play ();
 		// end game stufferoony goes here
 	}
 }

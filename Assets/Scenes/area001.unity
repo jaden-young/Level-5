@@ -2617,6 +2617,73 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 104348519}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &105092606
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 105092607}
+  - 222: {fileID: 105092609}
+  - 114: {fileID: 105092608}
+  m_Layer: 2
+  m_Name: DamageImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &105092607
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 105092606}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1923145645}
+  m_RootOrder: 1
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &105092608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 105092606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &105092609
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 105092606}
 --- !u!1 &105886438
 GameObject:
   m_ObjectHideFlags: 0
@@ -4874,7 +4941,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!4 &198298579 stripped
 Transform:
@@ -4891,10 +4958,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ea9d996be546a49bed112c7520e365, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 100
+  startingHealth: 100
   healthSlider: {fileID: 586599859}
+  damageImage: {fileID: 105092608}
   flashSpeed: 5
   flashColor: {r: 1, g: 0, b: 0, a: 0.1}
+  playerDamage: {fileID: 8300000, guid: bb0c863879964b84685e649ac019e955, type: 3}
+  playerDeath: {fileID: 8300000, guid: 55486433bcc2ae04fadf466841208def, type: 3}
+  shieldHit: {fileID: 8300000, guid: 3264c29590cb7b743b6e4dfe090349c3, type: 3}
 --- !u!1001 &198780701
 Prefab:
   m_ObjectHideFlags: 0
@@ -9112,7 +9183,7 @@ Transform:
   - {fileID: 76287114}
   - {fileID: 265510130}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
 --- !u!1 &277784158
 GameObject:
   m_ObjectHideFlags: 0
@@ -12343,7 +12414,7 @@ Transform:
   - {fileID: 50982424}
   - {fileID: 1180806717}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
 --- !u!1001 &657977491
 Prefab:
   m_ObjectHideFlags: 0
@@ -12489,6 +12560,18 @@ Prefab:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8200000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
@@ -12553,7 +12636,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
 --- !u!1001 &717167287
 Prefab:
   m_ObjectHideFlags: 0
@@ -19584,14 +19667,14 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1042814501}
-  - 33: {fileID: 1042814500}
   - 195: {fileID: 1042814502}
   - 95: {fileID: 1042814504}
   - 54: {fileID: 1042814506}
   - 114: {fileID: 1042814498}
   - 82: {fileID: 1042814499}
+  - 114: {fileID: 1042814503}
   m_Layer: 2
-  m_Name: UglyDragonHack
+  m_Name: TerryRotationFix
   m_TagString: Dragon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19608,14 +19691,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55da0fa71681c2742b30e96229e38e0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCoolDown: 3
+  attackCoolDown: 2.5
   dragonDamage: 25
   rotationSpeed: 0.1
   attackRadius: 30
-  player: {fileID: 198298579}
-  nav: {fileID: 1042814502}
-  anim: {fileID: 1042814504}
+  startingHealth: 100
   healthSlider: {fileID: 112896024}
+  player: {fileID: 198298579}
+  roar: {fileID: 8300000, guid: d23d8900e7bb7534d819908f342f8f20, type: 3}
+  fly: {fileID: 8300000, guid: 7e4789ff9ddf0594ba0210c482539e76, type: 3}
+  flutterKick: {fileID: 8300000, guid: fa88dd74bac02844e9bf15d267251e5d, type: 3}
 --- !u!82 &1042814499
 AudioSource:
   m_ObjectHideFlags: 0
@@ -19625,8 +19710,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d23d8900e7bb7534d819908f342f8f20, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -19638,7 +19723,7 @@ AudioSource:
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
-  BypassEffects: 0
+  BypassEffects: 1
   BypassListenerEffects: 0
   BypassReverbZones: 0
   rolloffCustomCurve:
@@ -19690,13 +19775,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!33 &1042814500
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1042814497}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1042814501
 Transform:
   m_ObjectHideFlags: 0
@@ -19709,7 +19787,7 @@ Transform:
   m_Children:
   - {fileID: 1446446325}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
 --- !u!195 &1042814502
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -19730,6 +19808,32 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1042814503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1042814497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bffa8aa898b437183cd5617f7b5303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathName: FlightPath
+  pathColor: {r: 0, g: 1, b: 1, a: 1}
+  nodes:
+  - {x: -101.89, y: 2.56, z: 13.66}
+  - {x: -115.456566, y: 26.414219, z: -26.80296}
+  - {x: -118.97627, y: 30, z: -80.28287}
+  - {x: -49.970985, y: 50, z: -57.620388}
+  - {x: -36.352486, y: 50, z: -34.306625}
+  - {x: -40.413544, y: 50, z: -0.96541214}
+  - {x: -81.937195, y: 30.177471, z: 37.483627}
+  - {x: -101.423294, y: 4.6469803, z: 13.787773}
+  nodeCount: 8
+  initialized: 1
+  initialName: New Path 1
+  pathVisible: 1
 --- !u!95 &1042814504
 Animator:
   serializedVersion: 3
@@ -19754,13 +19858,13 @@ Rigidbody:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1042814497}
   serializedVersion: 2
-  m_Mass: 100000000
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 14
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &1043174167
 GameObject:
@@ -19859,14 +19963,14 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1044484847}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -108.094444, y: 2.4300003, z: 20.481087}
+  m_LocalPosition: {x: -7.579895, y: 42.677155, z: -3.0744019}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1260811271}
   - {fileID: 267033147}
   - {fileID: 1299372647}
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_Father: {fileID: 2084777618}
+  m_RootOrder: 17
 --- !u!1 &1051786410
 GameObject:
   m_ObjectHideFlags: 0
@@ -28101,7 +28205,7 @@ Transform:
   - {fileID: 1252628326}
   - {fileID: 425166764}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
 --- !u!1001 &1431234100
 Prefab:
   m_ObjectHideFlags: 0
@@ -30358,9 +30462,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackCoolDown: 0.75
-  swordDamage: 5
-  audioSword: {fileID: 1668898422}
-  anim: {fileID: 1668898419}
+  swordDamage: 60
+  swordWoosh: {fileID: 8300000, guid: 4897584377e1a754eaf1667d7792e006, type: 3}
+  swordHit: {fileID: 8300000, guid: 5cdc827134d19384680ad144ede4eade, type: 3}
 --- !u!54 &1668898421
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30387,7 +30491,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 5cdc827134d19384680ad144ede4eade, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -35622,8 +35726,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 790399804}
+  - {fileID: 105092607}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -36196,8 +36301,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.9513459, y: 0.81713545, z: 1}
-  m_Center: {x: -0.81008536, y: 0.1903857, z: -0.000017285347}
+  m_Size: {x: 1.0617343, y: 0.81713545, z: 1}
+  m_Center: {x: -0.7548867, y: 0.1903629, z: -0.000018924475}
 --- !u!1 &1962389641
 GameObject:
   m_ObjectHideFlags: 0
@@ -39337,6 +39442,7 @@ Transform:
   - {fileID: 334499500}
   - {fileID: 145027281}
   - {fileID: 1473592798}
+  - {fileID: 1044484848}
   m_Father: {fileID: 0}
   m_RootOrder: 6
 --- !u!1 &2093195211

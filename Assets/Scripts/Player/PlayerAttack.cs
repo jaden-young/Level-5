@@ -4,20 +4,21 @@ using System.Collections;
 	
 public class PlayerAttack : MonoBehaviour 
 {
-	// public variables are set in editor
-	public float attackCoolDown; // Minimum time between attacks
-	public int swordDamage;      // Damage for each attack to cause
-	public AudioSource audioSword;
-	public Animator anim;
+	// Serialized fields set in editor
+	[SerializeField] private float attackCoolDown; // Minimum time between attacks
+	[SerializeField] private int swordDamage;      // Damage for each attack to cause
+	[SerializeField] private AudioClip swordWoosh;
+	[SerializeField] private AudioClip swordHit;
 
-
-	private float attackTimer = 0f; // Time since last attack
-	private bool isAttacking = false; // This will be set by Animation Events in Sword
+	private bool isAttacking; // This will be set by Animation Events in Sword
+	private Animator anim;
+	private AudioSource audio;
 
 	void Awake ()
 	{
-		//anim = GetComponent <Animator> ();
-		//audioSword = GetComponent <AudioSource> ();
+		anim = GetComponent <Animator> ();
+		audio = GetComponent <AudioSource> ();
+		isAttacking = false;
 	}
 		
 	void Start ()
@@ -47,6 +48,9 @@ public class PlayerAttack : MonoBehaviour
 
 		if (other.CompareTag ("Dragon") && isAttacking)
 		{
+			audio.clip = swordHit;
+			audio.Play ();
+
 			// Tells the dragon to look for a script attached to it that has the method 
 			// TakeDamage and call it with an argument of our swordDamage (int 5).
 			other.SendMessageUpwards ("TakeDamage", swordDamage, SendMessageOptions.DontRequireReceiver);
@@ -59,9 +63,9 @@ public class PlayerAttack : MonoBehaviour
 				
 	void Update () 
 	{
-		attackTimer += Time.deltaTime;
-
-		if (Input.GetMouseButtonDown (0) && attackTimer >= attackCoolDown && !isAttacking) 
+		// Timing of attacks is controlled by the animation events. Only
+		// able to attack again once attack animation is finished.
+		if (Input.GetMouseButtonDown (0) && !isAttacking) 
 		{
 			Attack ();
 		}			
@@ -93,8 +97,8 @@ public class PlayerAttack : MonoBehaviour
 	void Attack () 
 	{
 		anim.Play ("SwordSwing");
-		audioSword.Play ();
-		attackTimer = 0f;
+		audio.clip = swordWoosh;
+		audio.Play ();
 	}
 		
 }

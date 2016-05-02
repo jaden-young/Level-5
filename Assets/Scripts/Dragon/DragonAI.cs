@@ -4,34 +4,47 @@ using System.Collections;
 
 public class DragonAI : MonoBehaviour 
 {
-	// public variables are set in editor
-	public float attackCoolDown;
-	public int dragonDamage;
-	public float rotationSpeed;
-	public float attackRadius;
-	public Transform player;
-	public NavMeshAgent nav;
-	public Animator anim;
-	public const int STARTING_HEALTH = 100;
-	public Slider healthSlider;
+	// Serialized fields are set in editor
+	[SerializeField] private float attackCoolDown;
+	[SerializeField] private int dragonDamage;
+	[SerializeField] private float rotationSpeed;
+	[SerializeField] private float attackRadius;
+	[SerializeField] private int startingHealth;
+	[SerializeField] private Slider healthSlider;
+	[SerializeField] private Transform player;
 
-	private int currentHealth;
-	private bool isDead;
-	private int halfHealth = STARTING_HEALTH / 2;
+
+	[Header("Audio Clips")]
+	[Space(5)]
+	[SerializeField] private AudioClip roar;
+	[SerializeField] private AudioClip fly;
+	[SerializeField] private AudioClip flutterKick;
+
+	private Animator anim;
+	private NavMeshAgent nav;
+	private AudioSource audio;
 	private const int HEADSWIPE_RANGE = 13;
 	private const int FLUTTER_KICK_RANGE = 8;
-	private float attackTimer = 0f;
-	private bool hasFlown = false;
-	private bool isFlying = false;
+	private int currentHealth;
+	private bool isDead;
+	private bool isUpsideDown;
+	private int halfHealth;
+	private float attackTimer;
+	private bool hasFlown;
+	private bool isFlying;
 	private bool isAttacking; // This will be set by animation events
 
 	void Awake ()
 	{
 		anim = GetComponent <Animator> ();
-		nav = GetComponent<NavMeshAgent> ();
-		player = GameObject.FindGameObjectWithTag ("Player").transform;
+		nav = GetComponent <NavMeshAgent> ();
 		nav.updateRotation = true;
-		currentHealth = STARTING_HEALTH;
+		audio = GetComponent <AudioSource> ();
+		currentHealth = startingHealth;
+		halfHealth = startingHealth / 2;
+		attackTimer = 0f;
+		hasFlown = false;
+		isFlying = false;
 	}
 
 	void Start ()
@@ -42,28 +55,35 @@ public class DragonAI : MonoBehaviour
 	void Update () 
 	{
 
+		if (isDead && !isUpsideDown) {
+			Death ();
+			return;
+		}
 		/*
 		 * We only want to check for a new state to enter when the dragon isn't currently
 		 * attacking. This has an affect of waiting for the attack animation to complete
 		 * before doing anything else.
 		 */
-		if (isAttacking || isDead || attackTimer < attackCoolDown) {
+		if (attackTimer < attackCoolDown || isFlying) {
 			attackTimer += Time.deltaTime;
 			return;
 		}
-
-		if (isFlying) {
-			Fly ();
-			return;
-		}
-
+			
 		// Let's check for a new state to enter
 
 		// Take off and fly around for a bit when we reach half health
 		if (currentHealth <= halfHealth && !hasFlown) {
-			isFlying = true; // makes us start flying on next frame
+
+			isFlying = true;
 			hasFlown = true;
+
 			anim.Play ("TakeOff");
+
+			audio.clip = fly;
+			audio.loop = true;
+			audio.Play ();
+
+			Fly ();
 			return;
 		}
 
@@ -83,15 +103,15 @@ public class DragonAI : MonoBehaviour
 				} else {
 					HeadSwipe ();
 				}
-				// we're close, but target is not in front
+			// we're close, but target is not in front
 			} else {
 				RotateTowards (heading);
 			}
-			// we're too far away to attack, move towards target
+		// we're too far away to attack, move towards target
 		} else {
 			Chase ();
 		}
-		//attackTimer += Time.deltaTime;
+		attackTimer += Time.deltaTime;
 	}
 
 	public void TakeDamage (int amount)
@@ -106,8 +126,18 @@ public class DragonAI : MonoBehaviour
 		}
 	}
 
-	void Death () {
+	void Death ()
+	{
 		isDead = true;
+		nav.Stop ();
+		anim.Stop ();
+		if (!isUpsideDown) {
+			transform.Rotate (0, 0, 180);
+			isUpsideDown = true;
+		} else {
+			return;
+		}
+
 	}
 
 	// For use with animation events. See similar method in PlayerAttack for more info.
@@ -141,6 +171,8 @@ public class DragonAI : MonoBehaviour
 
 	void Roar () 
 	{
+		audio.clip = roar;
+		audio.Play ();
 		anim.Play ("Roar");
 	}
 	void FlutterKick ()
@@ -159,7 +191,18 @@ public class DragonAI : MonoBehaviour
 
 	void Fly ()
 	{
+		nav.enabled = false;
+		iTween.MoveTo (gameObject, iTween.Hash ("path", iTweenPath.GetPath ("FlightPath"),
+			"orienttopath", true, "lookTarget", .5f, "time", 30, "EaseType", iTween.EaseType.easeOutSine,
+			"onComplete", "EndFlight"));
+	}
 
+	void EndFlight () 
+	{
+		audio.loop = false;
+		isFlying = false;
+		nav.enabled = true;
+		Roar ();
 	}
 
 	void Chase ()
